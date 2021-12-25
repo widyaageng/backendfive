@@ -1,8 +1,11 @@
 var express = require('express');
 require('dotenv').config()
-var app = express();
+
 var cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+var app = express();
 const routerapi = express.Router();
 
 // ---------------- custom middlewares ----------------
@@ -12,11 +15,25 @@ function appLogger(req, res, next) {
   next();
 }
 // ---------------- end of custom middlewares ----------------
+const storageHandler = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './temp/img')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(
+      null,
+      file.fieldname === undefined ? 'default': file.fieldname + '-' + uniqueSuffix + '.png'
+      );
+  }
+});
+
+const upload = multer({
+  storage: storageHandler
+});
 
 // -------------------- utility methods --------------------
 // -------------------- end of utility methods --------------------
-
-
 
 // -------------------- apply middlewares --------------------
 app.use(cors());
@@ -27,11 +44,26 @@ app.use(path = '/', middlewareFunction = bodyParser.json());
 app.use(path = '/api', routerapi);
 // -------------------- end of apply middlewares --------------------
 
-app.get('/', function (req, res) {
-    res.sendFile(process.cwd() + '/views/index.html');
+// -------------------- routes --------------------
+app.get('/', function (req, res, next) {
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
 
+routerapi.post('/fileanalyse', upload.single('upfile'), function (req, res, next) {
+  // console.log({
+  //   size: req.file.size,
+  //   name: req.file.originalname,
+  //   type: req.file.mimetype
+  // });
+  let fileMetadata = {
+    name: req.file.originalname,
+    type: req.file.mimetype,
+    size: req.file.size
+  }
+  res.json(fileMetadata);
+  next();
+});
 
 
 // ---------------- listener -------------------
