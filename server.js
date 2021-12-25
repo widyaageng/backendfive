@@ -17,7 +17,7 @@ function appLogger(req, res, next) {
 // ---------------- end of custom middlewares ----------------
 const storageHandler = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './temp/img')
+    cb(null, `${process.cwd()}/temp/img`);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
