@@ -1,9 +1,13 @@
 var express = require('express');
 require('dotenv').config()
-
+const {format} = require('util')
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const { Storage } = require('@google-cloud/storage');
+
+// Instantiate a storage client
+const storage = new Storage();
 
 var app = express();
 const routerapi = express.Router();
@@ -15,24 +19,16 @@ function appLogger(req, res, next) {
   next();
 }
 // ---------------- end of custom middlewares ----------------
-const storageHandler = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, `${process.cwd()}/temp/img`);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(
-      null,
-      file.fieldname === undefined ? 'default': file.fieldname + '-' + uniqueSuffix + '.png'
-      );
-  }
-});
 
-const upload = multer({
-  storage: storageHandler
-});
+const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
 
 // -------------------- utility methods --------------------
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 1 * 1024 * 1024, // no larger than 1mb
+  }
+});
 // -------------------- end of utility methods --------------------
 
 // -------------------- apply middlewares --------------------
@@ -61,6 +57,25 @@ routerapi.post('/fileanalyse', upload.single('upfile'), function (req, res, next
     type: req.file.mimetype,
     size: req.file.size
   }
+
+  // Create a new blob in the bucket and upload the file data.
+  const blob = bucket.file(Date.now() + '_' + req.file.originalname);
+  const blobStream = blob.createWriteStream({
+    resumable: false,
+  });
+
+  blobStream.on('error', err => {
+    next(err);
+  });
+
+  blobStream.on('finish', () => {
+    // The public URL can be used to directly access the file via HTTP.
+    const publicUrl = format(
+      `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+    );
+  });
+
+  blobStream.end(req.file.buffer);
   res.json(fileMetadata);
   next();
 });
