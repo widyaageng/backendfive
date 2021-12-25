@@ -1,5 +1,9 @@
 .env
 node_modules
+<<<<<<< HEAD
 test.rest
 keys
 fcamp.json
+=======
+test.rest
+>>>>>>> 5b85cd45da1908eb320925df9b8f49f42a24ecb9

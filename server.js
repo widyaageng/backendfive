@@ -1,5 +1,6 @@
 var express = require('express');
 require('dotenv').config()
+<<<<<<< HEAD
 const {format} = require('util')
 var cors = require('cors');
 const bodyParser = require('body-parser');
@@ -8,6 +9,12 @@ const { Storage } = require('@google-cloud/storage');
 
 // Instantiate a storage client
 const storage = new Storage();
+=======
+
+var cors = require('cors');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+>>>>>>> 5b85cd45da1908eb320925df9b8f49f42a24ecb9
 
 var app = express();
 const routerapi = express.Router();
@@ -19,6 +26,22 @@ function appLogger(req, res, next) {
   next();
 }
 // ---------------- end of custom middlewares ----------------
+const storageHandler = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './temp/img')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(
+      null,
+      file.fieldname === undefined ? 'default': file.fieldname + '-' + uniqueSuffix + '.png'
+      );
+  }
+});
+
+const upload = multer({
+  storage: storageHandler
+});
 
 const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
 
@@ -57,6 +80,7 @@ routerapi.post('/fileanalyse', upload.single('upfile'), function (req, res, next
     type: req.file.mimetype,
     size: req.file.size
   }
+<<<<<<< HEAD
 
   // Create a new blob in the bucket and upload the file data.
   const blob = bucket.file(Date.now() + '_' + req.file.originalname);
@@ -76,6 +100,8 @@ routerapi.post('/fileanalyse', upload.single('upfile'), function (req, res, next
   });
 
   blobStream.end(req.file.buffer);
+=======
+>>>>>>> 5b85cd45da1908eb320925df9b8f49f42a24ecb9
   res.json(fileMetadata);
   next();
 });
