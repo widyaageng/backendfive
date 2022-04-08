@@ -52,6 +52,7 @@ routerapi.post('/fileanalyse', upload.single('upfile'), function (req, res, next
   //   name: req.file.originalname,
   //   type: req.file.mimetype
   // });
+  console.log(req.body);
   let fileMetadata = {
     name: req.file.originalname,
     type: req.file.mimetype,
