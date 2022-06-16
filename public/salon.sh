@@ -16,7 +16,7 @@ MAIN_MENU () {
   else
     echo "$SERVICES" | while read SERVICEID BAR SERVICENAME
     do
-      echo "$SERVICEID) $SERVICENAME"
+      echo "$SERVICEID) $SERVICENAME" | sed 's/^ *| *$//g'
     done
     read SERVICE_ID_SELECTED
 
@@ -48,10 +48,10 @@ MAIN_MENU () {
 
         #insert into customers table
         CUSTOMER_INSERT_RESULT=$($PSQL "INSERT INTO customers(phone,name) VALUES('$CUSTOMER_PHONE','$CUSTOMER_NAME');")
-        if [[ $CUSTOMER_INSERT_RESULT == "INSERT 0 1" ]]
-        then
-          echo -e "\nCongratulations, you are now registered customer."
-        fi
+        # if [[ $CUSTOMER_INSERT_RESULT == "INSERT 0 1" ]]
+        # then
+        #   # echo -e "\nCongratulations, you are now registered customer."
+        # fi
         #get customer_id
         CUSTOMER_ID=$($PSQL "SELECT customer_id FROM customers WHERE phone='$CUSTOMER_PHONE';")
       fi
@@ -64,7 +64,8 @@ MAIN_MENU () {
       read SERVICE_TIME
 
       #check if service_time entry is in correct format
-      while [[ ! $SERVICE_TIME =~ ^([0-9]{2}:[0-9]{2})|([0-9]{1,4}(am|pm))$ ]]
+      # while [[ ! $SERVICE_TIME =~ ^([0-9]{2}:[0-9]{2})|([0-9]{1,4}(am|pm))$ ]]
+      while [[ -z $SERVICE_TIME ]]
       do
         #redo the input request due to incorrect format
         echo -e "\nThat's in incorrect format. Please try again.\nPlease enter requested service time slot with format (HH:MM) for examples 15:30, 08:20, :"
