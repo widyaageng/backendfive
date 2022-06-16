@@ -1,6 +1,6 @@
 #!/bin/bash
 PSQL="psql --username=freecodecamp --tuples-only --dbname=salon -c"
-echo -e "\n~~~~ Welcome to Bufoon Salon ~~~~\n"
+echo -e "\n~~~~~ MY SALON ~~~~~\n"
 
 SERVICES=$($PSQL "SELECT service_id,name FROM services;")
 
@@ -14,7 +14,6 @@ MAIN_MENU () {
   then
     echo "We don't have available services right now."
   else
-    echo -e "\nPlease pick a service you would like to have?"
     echo "$SERVICES" | while read SERVICEID BAR SERVICENAME
     do
       echo "$SERVICEID) $SERVICENAME"
@@ -28,13 +27,13 @@ MAIN_MENU () {
     if [[ -z $SERVICE_ID ]]
     then
       #send to top main menu
-      MAIN_MENU "Sorry, that service is not in the list."
+      MAIN_MENU "I could not find that service. What would you like today?"
     else
       #get selected service type
       SERVICE_SELECTED=$($PSQL "SELECT name FROM services WHERE service_id=$SERVICE_ID_SELECTED;")
 
       #get phone number input
-      echo -e "\nPlease enter your phone number:"
+      echo -e "\nWhat's your phone number?"
       read CUSTOMER_PHONE
 
       #get customer_id
@@ -44,8 +43,7 @@ MAIN_MENU () {
       if [[ -z $CUSTOMER_ID ]]
       then
         #get name input
-        echo -e "\nIt seems you are not yet registered as customer, sign up for free."
-        echo -e "\nPlease enter your name:"
+        echo -e "\nI don't have a record for that phone number, what's your name?"
         read CUSTOMER_NAME
 
         #insert into customers table
@@ -62,11 +60,11 @@ MAIN_MENU () {
       CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE phone='$CUSTOMER_PHONE';")
 
       #get service_time
-      echo -e "\nPlease enter requested service time slot with format (HH:MM) for examples 15:30, 08:20, :"
+      echo -e "\nWhat time would you like your$SERVICE_SELECTED,$CUSTOMER_NAME?"
       read SERVICE_TIME
 
       #check if service_time entry is in correct format
-      while [[ ! $SERVICE_TIME =~ ^([0-9]{2}:[0-9]{2})|([0-9]{2,4}(am|pm))$ ]]
+      while [[ ! $SERVICE_TIME =~ ^([0-9]{2}:[0-9]{2})|([0-9]{1,4}(am|pm))$ ]]
       do
         #redo the input request due to incorrect format
         echo -e "\nThat's in incorrect format. Please try again.\nPlease enter requested service time slot with format (HH:MM) for examples 15:30, 08:20, :"
@@ -77,9 +75,10 @@ MAIN_MENU () {
       SERVICE_INSERT_RESULT=$($PSQL "INSERT INTO appointments(customer_id, service_id, time) VALUES($CUSTOMER_ID,$SERVICE_ID,'$SERVICE_TIME');")
       if [[ $SERVICE_INSERT_RESULT == "INSERT 0 1" ]]
       then
-        echo -e "\nI have put you down for a $SERVICE_SELECTED at $SERVICE_TIME, $CUSTOMER_NAME."
+        echo -e "\nI have put you down for a$SERVICE_SELECTED at $SERVICE_TIME,$CUSTOMER_NAME."
       fi
     fi
   fi
 }
+echo -e "\nWelcome to My Salon, how can I help you?\n"
 MAIN_MENU
