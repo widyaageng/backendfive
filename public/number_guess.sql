@@ -51,7 +51,7 @@ CREATE TABLE public.users (
     user_id integer NOT NULL,
     username character varying(20) NOT NULL,
     games_played integer DEFAULT 0,
-    best_guess integer
+    best_game integer
 );
 
 
@@ -90,39 +90,29 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.users VALUES (98, 'user_1655659804413', 2, 999999);
-INSERT INTO public.users VALUES (97, 'user_1655659804414', 5, 999999);
-INSERT INTO public.users VALUES (100, 'user_1655659861650', 2, 999999);
-INSERT INTO public.users VALUES (99, 'user_1655659861651', 5, 999999);
-INSERT INTO public.users VALUES (102, 'user_1655659876478', 2, 999999);
+INSERT INTO public.users VALUES (260, 'Joni', 3, 1);
+INSERT INTO public.users VALUES (261, 'Join', 2, 999999);
+INSERT INTO public.users VALUES (263, 'user_1655662745163', 2, 724);
+INSERT INTO public.users VALUES (262, 'user_1655662745164', 5, 44);
 INSERT INTO public.users VALUES (90, 'user_1655659629039', 2, 999999);
-INSERT INTO public.users VALUES (101, 'user_1655659876479', 5, 999999);
-INSERT INTO public.users VALUES (88, 'Widya', 3, 999999);
+INSERT INTO public.users VALUES (265, 'user_1655662756383', 2, 989);
 INSERT INTO public.users VALUES (89, 'user_1655659629040', 5, 999999);
-INSERT INTO public.users VALUES (104, 'user_1655659931226', 2, 999999);
-INSERT INTO public.users VALUES (92, 'user_1655659665281', 2, 999999);
-INSERT INTO public.users VALUES (103, 'user_1655659931227', 5, 999999);
-INSERT INTO public.users VALUES (91, 'user_1655659665282', 5, 999999);
-INSERT INTO public.users VALUES (94, 'user_1655659730495', 2, 999999);
-INSERT INTO public.users VALUES (106, 'user_1655659946728', 2, 999999);
-INSERT INTO public.users VALUES (93, 'user_1655659730496', 5, 999999);
-INSERT INTO public.users VALUES (105, 'user_1655659946729', 5, 999999);
-INSERT INTO public.users VALUES (96, 'user_1655659761152', 2, 999999);
-INSERT INTO public.users VALUES (108, 'user_1655659974482', 2, 999999);
-INSERT INTO public.users VALUES (95, 'user_1655659761153', 5, 999999);
-INSERT INTO public.users VALUES (107, 'user_1655659974483', 5, 999999);
-INSERT INTO public.users VALUES (110, 'user_1655660028313', 2, 999999);
-INSERT INTO public.users VALUES (109, 'user_1655660028314', 5, 999999);
-INSERT INTO public.users VALUES (111, 'Joe', 1, 999999);
-INSERT INTO public.users VALUES (113, 'user_1655660088633', 2, 999999);
-INSERT INTO public.users VALUES (112, 'user_1655660088634', 5, 999999);
+INSERT INTO public.users VALUES (264, 'user_1655662756384', 5, 143);
+INSERT INTO public.users VALUES (267, 'user_1655662760413', 2, 939);
+INSERT INTO public.users VALUES (266, 'user_1655662760414', 5, 416);
+INSERT INTO public.users VALUES (88, 'Widya', 8, 1);
+INSERT INTO public.users VALUES (270, 'Jeni', 2, 9);
+INSERT INTO public.users VALUES (272, 'user_1655663224975', 2, 317);
+INSERT INTO public.users VALUES (271, 'user_1655663224976', 5, 382);
+INSERT INTO public.users VALUES (274, 'user_1655663234270', 2, 45);
+INSERT INTO public.users VALUES (273, 'user_1655663234271', 5, 148);
 
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 113, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 274, true);
 
 
 --
